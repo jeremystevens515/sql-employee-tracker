@@ -1,26 +1,20 @@
 const inquirer = require('inquirer');
-const express = require('express');
 const mysql = require('mysql2');
-const { queries, insert, update } = require('./sql-functions');
+const cTable = require('console.table');
 
-// const PORT = process.env.PORT || 3001;
-// const app = express();
+const questions = require ('./questions');
+const queries = require('./queries');
 
-// app.use(express.urlencoded({extended: true}));
-// app.use(express.json());
-
-// const db = mysql.createConnection(
-//     {
-//         host: 'localhost',
-//         user: 'root', 
-//         password: 'sqlpass4',
-//         database: 'business_db'
-//     },
-//     console.log('connected to business_db')
-// );
-
+// ----------------------------------------------------------------------------------------------------
 const welcomeAction = () => {
-    const choicesArr = ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role']
+    const choicesArr = ['view all departments', 
+                        'view all roles', 
+                        'view all employees', 
+                        'add a department', 
+                        'add a role', 
+                        'add an employee', 
+                        'update an employee role'
+                    ]
     inquirer
         .prompt([
             {   
@@ -31,10 +25,34 @@ const welcomeAction = () => {
             }
         ])
         .then((answers) => {
-            let index = choicesArr.indexOf(answers.action)
+            const index = choicesArr.indexOf(answers.action)
             console.log(index)
+            switch (parseInt(index)) {
+                case 0:
+                    queries.viewAllDepartments();
+                    break;
+                case 1:
+                    queries.viewAllRoles();
+                    break;
+                case 2:
+                    queries.viewAllEmployees();
+                    break;
+                case 3:
+                    questions.newDepartmentName();
+                    break;
+                case 4:
+                    questions.newRoleName();
+                    break;
+                case 5:
+                    questions.newEmployeeName();
+                    break;
+                case 6:
+                    questions.updateEmployee();
+                    break;
+                default:
+                    console.log('looks like there was a problem')
+        }
         })
 };
 
-console.log([...queries, ...insert, ...update]);
-welcomeAction();
+welcomeAction()
