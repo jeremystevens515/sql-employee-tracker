@@ -35,7 +35,7 @@ const queries = {
 
     insertIntoDepartment(newDept) {
         db.query(`INSERT INTO department (dept_name) VALUES ("${newDept}")`, (err, results, fields) => {
-            // console.table(results);
+            console.log("New department added!")
         });
         db.query('SELECT * FROM department;', (err, results, fields) => {
             console.table(results)
@@ -43,9 +43,16 @@ const queries = {
     },
 
     insertIntoRole(newRole, salary, deptID) {
-        db.query(`INSERT INTO role (title, salary, department_id) VALUES (${newRole}, ${salary}, ${deptID})`, (err, results, fields) => {
-            console.table(results);
+        db.query(`INSERT INTO role (title, salary, department_id) VALUES ("${newRole}", "${salary}", (SELECT id FROM department WHERE dept_name = "${deptID}"))`, (err, results, fields) => {
+            if (err) {
+                console.error(err)
+            } else {
+                console.log("New role added!")
+            }
         });
+        db.query('SELECT * FROM role ORDER BY department_id', (err, results) => {
+            console.table(results);
+        })
     },
 
     insertIntoEmployee(firstName, lastName, roleID, managerID) {

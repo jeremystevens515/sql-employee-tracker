@@ -51,7 +51,8 @@ const questions = {
                 } 
             ])
             .then((answers) => {
-                queries.insertIntoRole(answers.newRole, answers.salary, answers.roleDept)
+                console.log(answers)
+                queries.insertIntoRole(answers.newRole, answers.salary, answers.roleDept);
             })
 
     },
@@ -108,23 +109,24 @@ const helperFunctions = {
         db.query('SELECT * FROM department', (err, results, fields) => {
             // console.log(results);
             for (let i = 0; i < results.length; i++) {
-                arr.push(results[i].id, results[i].dept_name)
+                arr.push({
+                    id: results[i].id, 
+                    name: results[i].dept_name
+                }); 
             }
-            console.log(arr);
-            return arr;
-        })
+        });
+        return arr;
     },
 
     getRoles() {
         let arr = [];
         db.query('SELECT * FROM role', (err, results, fields) => {
-            // console.log(results);
             for (let i = 0; i < results.length; i++) {
                 arr.push(results[i].id, results[i].title)
             }
             console.log(arr);
-            return arr;
         })
+        return arr;
     },
 
     getEmployees() {

@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS business_db;
 CREATE DATABASE IF NOT EXISTS business_db;
 USE business_db;
 
