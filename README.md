@@ -1,4 +1,4 @@
-# sql-employee-tracker
+# SQL Employee Tracker
 ## Description
 This is a command-line application that lets employers view and manage an employee database using Node.js, Inquirer, and MySQL2.
 
