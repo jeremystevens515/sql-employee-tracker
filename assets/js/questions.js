@@ -75,9 +75,16 @@ const questions = {
                     type: 'list',
                     choices: helperFunctions.getRoles(),
                     name: 'empRole'
+                },
+                {
+                    message: "Who will this employee be reporting to as their manager?",
+                    type: 'list',
+                    choices: helperFunctions.getEmployees(),
+                    name: 'empManager'
                 }
             ]).then((answers) => {
-                queries.insertIntoEmployee()
+                console.log('answers: ', answers)
+                queries.insertIntoEmployee(answers.firstName, answers.lastName, answers.empRole, answers.empManager);
             })
 
     },
@@ -109,12 +116,9 @@ const helperFunctions = {
         db.query('SELECT * FROM department', (err, results, fields) => {
             // console.log(results);
             for (let i = 0; i < results.length; i++) {
-                arr.push({
-                    id: results[i].id, 
-                    name: results[i].dept_name
-                }); 
+                arr.push(results[i].dept_name);
             }
-        });
+        })
         return arr;
     },
 
@@ -122,17 +126,21 @@ const helperFunctions = {
         let arr = [];
         db.query('SELECT * FROM role', (err, results, fields) => {
             for (let i = 0; i < results.length; i++) {
-                arr.push(results[i].id, results[i].title)
+                arr.push(results[i].title)
             }
-            console.log(arr);
         })
         return arr;
     },
 
     getEmployees() {
+        let arr = [];
         db.query('SELECT * FROM employee', (err, results, fields) => {
-            console.log(results);
+            for (let i = 0; i < results.length; i++) {
+                arr.push(results[i].first_name + ' ' + results[i].last_name)
+            }
         })
+        arr.push('None');
+        return arr;
     }
 }
 

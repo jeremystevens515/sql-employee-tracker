@@ -55,10 +55,28 @@ const queries = {
         })
     },
 
-    insertIntoEmployee(firstName, lastName, roleID, managerID) {
-        db.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES (${firstName}, ${lastName}, ${roleID}, ${managerID})`, (err, results, fields) => {
-            console.table(results);
-        });
+    insertIntoEmployee(firstName, lastName, empRole, empManager) {
+        if (empManager === 'None') {
+            db.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ("${firstName}", "${lastName}", (SELECT id FROM role WHERE title = "${empRole}"))`, (err, results, fields) => {
+                err ? console.error(err) : console.log("New employee added!")
+                db.query(`SELECT * FROM employee`, (err, results) => {
+                    console.table(results);
+                })
+            });
+        } else {
+            // get manager id
+            db.query(`SELECT id FROM employee WHERE CONCAT(first_name,' ', last_name) = "${empManager}"`, (err, results) => {
+                let managerID = results[0].id;
+                // then pass manager id to this v method
+                db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", (SELECT id FROM role WHERE title = "${empRole}"), ${managerID})`, (err, results, fields) => {
+                    err ? console.error(err) : console.log("New employee added!")
+                    db.query(`SELECT * FROM employee`, (err, results) => {
+                        console.table(results);
+                    })
+                });
+            });
+            
+        }
     },
 
     updateEmployeeRole(newRole, empID) {
