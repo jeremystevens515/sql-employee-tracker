@@ -83,8 +83,8 @@ const questions = {
                     name: 'empManager'
                 }
             ]).then((answers) => {
-                console.log('answers: ', answers)
-                queries.insertIntoEmployee(answers.firstName, answers.lastName, answers.empRole, answers.empManager);
+                // console.log('answers: ', answers)
+                queries.insertIntoEmployee(answers.firstName.trim(), answers.lastName.trim(), answers.empRole, answers.empManager);
             })
 
     },
@@ -105,7 +105,8 @@ const questions = {
                     name: 'role'
                 }
             ]).then((answers) => {
-                queries.updateEmployeeRole()
+                console.log(answers)
+                queries.updateEmployeeRole(answers.emp, answers.role);
             })
     }
 }
@@ -134,15 +135,14 @@ const helperFunctions = {
 
     getEmployees() {
         let arr = [];
-        db.query('SELECT * FROM employee', (err, results, fields) => {
+        db.query('SELECT first_name, last_name FROM employee', (err, results, fields) => {
             for (let i = 0; i < results.length; i++) {
-                arr.push(results[i].first_name + ' ' + results[i].last_name)
+                arr.push([results[i].first_name,results[i].last_name].join(' '))
             }
+            arr.push('None')
         })
-        arr.push('None');
         return arr;
     }
 }
 
 module.exports = questions;
-

@@ -5,8 +5,18 @@ const cTable = require('console.table');
 const questions = require ('./questions');
 const queries = require('./queries');
 
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root', 
+        password: 'sqlpass4',
+        database: 'business_db'
+    },
+    console.log('connected to business_db')
+);
+
 // ----------------------------------------------------------------------------------------------------
-const welcomeAction = () => {
+function welcomeAction() {
     const choicesArr = ['view all departments', 
                         'view all roles', 
                         'view all employees', 
@@ -26,8 +36,8 @@ const welcomeAction = () => {
         ])
         .then((answers) => {
             const index = choicesArr.indexOf(answers.action)
-            console.log(index)
-            switch (parseInt(index)) {
+            // console.log(index)
+           switch (parseInt(index)) {
                 case 0:
                     queries.viewAllDepartments();
                     break;
@@ -52,7 +62,9 @@ const welcomeAction = () => {
                 default:
                     console.log('looks like there was a problem')
         }
-        })
+    })
 };
+
+module.exports = welcomeAction;
 
 welcomeAction()

@@ -1,5 +1,6 @@
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const index = require('./index');
 
 const db = mysql.createConnection(
     {
@@ -65,7 +66,9 @@ const queries = {
             });
         } else {
             // get manager id
-            db.query(`SELECT id FROM employee WHERE CONCAT(first_name,' ', last_name) = "${empManager}"`, (err, results) => {
+            console.log('empManager: ', empManager)
+            db.query(`SELECT id FROM employee WHERE CONCAT(first_name," ", last_name) = "${empManager}"`, (err, results) => {
+                // err ? console.error(err) : console.log('results: ', results[0].id)
                 let managerID = results[0].id;
                 // then pass manager id to this v method
                 db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", (SELECT id FROM role WHERE title = "${empRole}"), ${managerID})`, (err, results, fields) => {
@@ -81,12 +84,14 @@ const queries = {
 
     updateEmployeeRole(newRole, empID) {
         db.query(`UPDATE employee SET role_id = ${newRole} WHERE id = ${empID}`, (err, results, fields) => {
+            err ? console.error(err) : console.log("Employee updated!")
+        });
+
+        db.query(`SELECT * FROM employee`, (err, results, fields) => {
             console.table(results)
         });
     }
 };
-
-
 
 
 module.exports = queries;
